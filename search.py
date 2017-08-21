@@ -87,7 +87,7 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    visited = set() # store state
+    '''visited = [] # store state
     dfs_stack = util.Stack()  # stores (state, direction, cost)
     start_state = problem.getStartState()
     initial = (problem.getStartState(), 'Nothing', 0)
@@ -109,7 +109,7 @@ def depthFirstSearch(problem):
         if not count == 0:
             actions.append(current_tuple)
 
-        visited.add(current_state)
+        visited.append(current_state)
 
         if problem.isGoalState(current_state):
             # print 'find it!'
@@ -146,7 +146,27 @@ def depthFirstSearch(problem):
                 else:
                     # print 'starting a new branch'
                     break
-        count += 1
+        count += 1'''
+    dfs_stack = util.Stack()
+    actions = []
+    visted = []
+    dfs_stack.push((problem.getStartState(), actions))
+
+    while not dfs_stack.isEmpty():
+        current_tuple = dfs_stack.pop()
+        current_state = current_tuple[0]
+        current_actions = current_tuple[1]
+
+        if current_state not in visted:
+            visted.append(current_state)
+        else:
+            continue
+
+        if problem.isGoalState(current_state):
+            return current_actions
+        else:
+            for suc in problem.getSuccessors(current_state):
+                dfs_stack.push((suc[0], current_actions + [suc[1]]))
 
     util.raiseNotDefined()
 
@@ -198,29 +218,34 @@ def uniformCostSearch(problem):
     "*** YOUR CODE HERE ***"
     start_state = problem.getStartState()
     visited = []
+    global_visited = []
     actions = []
     cost = 0
     pri_queue = util.PriorityQueue()
-    initial = ((start_state, actions), cost)
-    print 'initial: ', initial
 
-    pri_queue.push(initial)
+    pri_queue.update((start_state, actions, cost), cost)
 
     while not pri_queue.isEmpty():
         current_tuple = pri_queue.pop()
-        current_state = current_tuple[0][0]
-        current_actions = current_tuple[0][1]
-        current_cost = current_tuple[1]
+        # print 'tuple: ', current_tuple
+        current_state = current_tuple[0]
+        # print 'state: ', current_state
+        current_actions = current_tuple[1]
+        # print 'actions: ', current_actions
+        current_cost = current_tuple[2]
+        # print 'cost: ', current_cost
 
-        if current_state in visited:
+        if current_state in global_visited:
             continue
+        global_visited.append(current_state)
 
         if problem.isGoalState(current_state):
             return current_actions
         else:
             successors = problem.getSuccessors(current_state)  # tuple
             for suc in successors:
-                pri_queue.update(((suc[0], current_state + [suc[1]]), current_cost + suc[2]))
+                if suc[0] not in global_visited:
+                    pri_queue.update((suc[0], current_actions + [suc[1]], current_cost + suc[2]), current_cost + suc[2])
 
     util.raiseNotDefined()
 
@@ -234,6 +259,36 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    pri_queue = util.PriorityQueue()
+    actions = []
+    visited = []
+    cost = 0
+    cost_dict = {}
+    pri_queue.update((problem.getStartState(), actions, 0), cost)
+    while not pri_queue.isEmpty():
+        current_tuple = pri_queue.pop()
+        # print 'current tuple', current_tuple
+        # print type(current_tuple)
+        current_state = current_tuple[0]
+        # print 'current state', current_state
+        current_actions = current_tuple[1]
+        # print 'current actions', current_actions
+        current_cost = current_tuple[2]
+        # print 'current cost', current_cost
+        if current_state not in visited:
+            visited.append(current_state)
+            cost_dict[current_state] = current_cost
+        elif current_cost < cost_dict[current_state]:
+            pass
+        else:
+            continue
+
+        if problem.isGoalState(current_state):
+            return current_actions
+        else:
+            for suc in problem.getSuccessors(current_state):  # tuple
+                pri_queue.update((suc[0], current_actions + [suc[1]], current_cost + suc[2]), current_cost + nullHeuristic(current_state))
+
     util.raiseNotDefined()
 
 
