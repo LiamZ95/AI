@@ -175,41 +175,31 @@ def breadthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
 
     start_state = problem.getStartState()
-    visited = [start_state]
     actions = []
     bfs_queue = util.Queue()
-    initial_tuple = (start_state, actions, visited)  # a tuple of state, action and visited set
+    initial_tuple = (start_state, actions)  # a tuple of state, action and visited set
 
     bfs_queue.push(initial_tuple)
-    global_visited = []
+    visited = []
     while not bfs_queue.isEmpty():
         current_tuple = bfs_queue.pop()
-        # print 'current tup', current_tuple
         current_state = current_tuple[0]
-        if current_state in global_visited:
+
+        if current_state in visited:
             continue
 
-        global_visited.append(current_state)
-        # print 'current state', current_state
+        visited.append(current_state)
+        print 'visited: ', visited
         current_action = current_tuple[1]
-        # print 'current act: ', current_action
-        current_visited = current_tuple[2]
-        # print 'current visited: ', current_visited
 
         if problem.isGoalState(current_state):
-            # print 'find it'
             return current_action
         else:
             successors = problem.getSuccessors(current_state)
             for suc in successors:
-                if suc[0] not in current_visited:
-                    updated_act = current_action + [suc[1]]
-                    # print 'u_act: ', updated_act
-                    updated_visited = current_visited + [suc[0]]
-                    updated_tuple = (suc[0], updated_act, updated_visited)
-                    # print 'u_tuple: ', updated_tuple
-                    bfs_queue.push(updated_tuple)
-        # print ''
+                updated_act = current_action + [suc[1]]
+                updated_tuple = (suc[0], updated_act)
+                bfs_queue.push(updated_tuple)
 
     util.raiseNotDefined()
 
