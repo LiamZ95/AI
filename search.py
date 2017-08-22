@@ -257,14 +257,9 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     pri_queue.update((problem.getStartState(), actions, 0), cost)
     while not pri_queue.isEmpty():
         current_tuple = pri_queue.pop()
-        # print 'current tuple', current_tuple
-        # print type(current_tuple)
         current_state = current_tuple[0]
-        # print 'current state', current_state
         current_actions = current_tuple[1]
-        # print 'current actions', current_actions
         current_cost = current_tuple[2]
-        # print 'current cost', current_cost
         if current_state not in visited:
             visited.append(current_state)
             cost_dict[current_state] = current_cost
@@ -279,7 +274,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             for suc in problem.getSuccessors(current_state):
                 updated_actions = current_actions + [suc[1]]
                 pri_queue.update((suc[0], updated_actions, current_cost + suc[2]),
-                                 problem.getCostOfActions(updated_actions) + nullHeuristic(current_state))
+                                 problem.getCostOfActions(updated_actions) + heuristic(current_state, problem))
 
     util.raiseNotDefined()
 
