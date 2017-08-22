@@ -189,7 +189,7 @@ def breadthFirstSearch(problem):
             continue
 
         visited.append(current_state)
-        print 'visited: ', visited
+        # print 'visited: ', visited
         current_action = current_tuple[1]
 
         if problem.isGoalState(current_state):
@@ -276,8 +276,10 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         if problem.isGoalState(current_state):
             return current_actions
         else:
-            for suc in problem.getSuccessors(current_state):  # tuple
-                pri_queue.update((suc[0], current_actions + [suc[1]], current_cost + suc[2]), current_cost + nullHeuristic(current_state))
+            for suc in problem.getSuccessors(current_state):
+                updated_actions = current_actions + [suc[1]]
+                pri_queue.update((suc[0], updated_actions, current_cost + suc[2]),
+                                 problem.getCostOfActions(updated_actions) + nullHeuristic(current_state))
 
     util.raiseNotDefined()
 

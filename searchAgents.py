@@ -315,10 +315,8 @@ class CornersProblem(search.SearchProblem):
         for corner in self.corners:
             if corner == state[0]:
                 state[1].remove(corner)
-                print 'removed'
         if len(state[1]) == 0:
-            print 'visited all'
-        return len(state[1]) == 0
+            return len(state[1]) == 0
         util.raiseNotDefined()
 
     def getSuccessors(self, state):
