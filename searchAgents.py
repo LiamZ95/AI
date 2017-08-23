@@ -380,7 +380,49 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    top, right = problem.walls.height - 2, problem.walls.width - 2
+
+    def myManhattan(coord, corner):
+        return abs(coord[0] - corner[0]) + abs(coord[1] - corner[1])
+
+    # return ((xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2) ** 0.5
+    def myEuc(current_state, corners):
+        res = []
+        coord = current_state[0]
+
+        for corner in corners:
+            euc_dis = ((coord[0] - corner[0]) ** 2 + (coord[1] - corner[1]) ** 2) ** 0.5
+            res.append(euc_dis)
+        return res
+
+    coord = state[0]
+    visited = state[1]
+    unvisited = []
+
+    for corner in corners:
+        if corner not in visited:
+            unvisited.append(corner)
+
+    res = 0
+
+    while not len(unvisited) == 0:
+        distances = []
+        for x in unvisited:
+            distances.append((myManhattan(coord, x), x))
+
+        temp = sorted(distances, key=lambda x: x[0])[0]
+        distance = temp[0]
+        corner = temp[1]
+
+        res += distance
+        unvisited.remove(corner)
+        coord = corner
+
+    return res
+
+
+    # return myEuc(state, corners)
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"

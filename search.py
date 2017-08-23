@@ -262,9 +262,9 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         current_cost = current_tuple[2]
         if current_state not in visited:
             visited.append(current_state)
-            cost_dict[current_state] = current_cost
-        elif current_cost < cost_dict[current_state]:
-            pass
+            # cost_dict[current_state] = current_cost
+        # elif current_cost < cost_dict[current_state]:
+            # pass
         else:
             continue
 
