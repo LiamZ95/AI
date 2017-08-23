@@ -273,8 +273,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         else:
             for suc in problem.getSuccessors(current_state):
                 updated_actions = current_actions + [suc[1]]
-                pri_queue.update((suc[0], updated_actions, current_cost + suc[2]),
-                                 problem.getCostOfActions(updated_actions) + heuristic(current_state, problem))
+                pri_queue.update((suc[0], updated_actions, current_cost + heuristic(suc[0], problem)),
+                                 problem.getCostOfActions(updated_actions) + heuristic(suc[0], problem))
 
     util.raiseNotDefined()
 
