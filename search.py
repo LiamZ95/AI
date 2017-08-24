@@ -149,7 +149,7 @@ def depthFirstSearch(problem):
         count += 1'''
     dfs_stack = util.Stack()
     actions = []
-    visted = []
+    visited = []
     dfs_stack.push((problem.getStartState(), actions))
 
     while not dfs_stack.isEmpty():
@@ -157,8 +157,8 @@ def depthFirstSearch(problem):
         current_state = current_tuple[0]
         current_actions = current_tuple[1]
 
-        if current_state not in visted:
-            visted.append(current_state)
+        if current_state not in visited:
+            visited.append(current_state)
         else:
             continue
 

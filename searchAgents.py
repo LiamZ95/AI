@@ -331,7 +331,7 @@ class CornersProblem(search.SearchProblem):
 
             "*** YOUR CODE HERE ***"
             current_state = state[0]
-            current_visted = state[1]
+            current_visited = state[1]
 
             x, y = current_state
             dx, dy = Actions.directionToVector(action)
@@ -339,12 +339,12 @@ class CornersProblem(search.SearchProblem):
             next_state = (nextx, nexty)
             hitsWall = self.walls[nextx][nexty]
 
-            next_visited = current_visted[:]
+            next_visited = current_visited[:]  # copy this list!!!
+
             if not hitsWall:
                 if (next_state in self.corners) and (next_state not in next_visited):
                     next_visited.append(next_state)
                 successors.append(((next_state, next_visited), action, 1))
-
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -380,22 +380,17 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+
     top, right = problem.walls.height - 2, problem.walls.width - 2
 
     def myManhattan(coord, corner):
         return abs(coord[0] - corner[0]) + abs(coord[1] - corner[1])
 
     # return ((xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2) ** 0.5
-    def myEuc(current_state, corners):
-        res = []
-        coord = current_state[0]
+    def myEuc(node, corner):
+        return ((node[0] - corner[0]) ** 2 + (node[1] - corner[1]) ** 2) ** 0.5
 
-        for corner in corners:
-            euc_dis = ((coord[0] - corner[0]) ** 2 + (coord[1] - corner[1]) ** 2) ** 0.5
-            res.append(euc_dis)
-        return res
-
-    coord = state[0]
+    location = state[0]
     visited = state[1]
     unvisited = []
 
@@ -408,19 +403,20 @@ def cornersHeuristic(state, problem):
     while not len(unvisited) == 0:
         distances = []
         for x in unvisited:
-            distances.append((myManhattan(coord, x), x))
+            # distances.append((myManhattan(coord, x), x))
+            distances.append((myEuc(location, x), x))
 
         temp = sorted(distances, key=lambda x: x[0])[0]
+
         distance = temp[0]
         corner = temp[1]
 
         res += distance
+        # print 'h: ', res
         unvisited.remove(corner)
-        coord = corner
+        location = corner
 
     return res
-
-
     # return myEuc(state, corners)
 
 
@@ -516,7 +512,12 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+
+    food_list = foodGrid.asList()
+
+    heuristic = len(food_list)
+
+    return heuristic
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
