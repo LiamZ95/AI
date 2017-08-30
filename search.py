@@ -207,7 +207,6 @@ def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     start_state = problem.getStartState()
-    visited = []
     global_visited = []
     actions = []
     cost = 0
