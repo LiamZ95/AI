@@ -339,8 +339,8 @@ class CornersProblem(search.SearchProblem):
             next_state = (nextx, nexty)
 
             next_visited = current_visited[:]  # copy this list!!!
-
-            if not self.walls[nextx][nexty]:
+            hitsWall = self.walls[nextx][nexty]
+            if not hitsWall:
                 if (next_state in self.corners) and (next_state not in next_visited):
                     next_visited.append(next_state)
                 successors.append(((next_state, next_visited), action, 1))
