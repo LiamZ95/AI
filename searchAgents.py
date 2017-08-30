@@ -391,8 +391,9 @@ def cornersHeuristic(state, problem):
 
     location = state[0]
     visited = state[1]
-    unvisited = []
 
+    # get unvisited list
+    unvisited = []
     for corner in corners:
         if corner not in visited:
             unvisited.append(corner)
